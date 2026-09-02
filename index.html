@@ -1590,6 +1590,22 @@
 <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
 <script>
     // =============================================================
+    // 0. РАЗБЛОКИРОВКА АУДИО ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
+    // =============================================================
+    document.addEventListener('touchstart', function() {
+        // Создаем и сразу останавливаем аудио для разблокировки
+        const unlockAudio = new Audio();
+        unlockAudio.src = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAABQAFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAA';
+        unlockAudio.play().catch(() => {});
+        // Разблокировка Speech Synthesis
+        try {
+            const utterance = new SpeechSynthesisUtterance('');
+            utterance.volume = 0;
+            window.speechSynthesis.speak(utterance);
+        } catch (e) {}
+    }, { once: true });
+
+    // =============================================================
     // 1. ВКЛАДКИ (TABS)
     // =============================================================
     const tabs = document.querySelectorAll('.tab-btn');
@@ -1610,7 +1626,6 @@
             Object.keys(contents).forEach(key => {
                 contents[key].classList.toggle('active', key === this.dataset.tab);
             });
-            // если запись активна — останавливаем
             if (isRecording) {
                 resetRecorder();
             }
@@ -1695,12 +1710,42 @@
     function playAudio(text) {
         const enc = encodeURIComponent(text);
         const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${enc}&tl=en&client=tw-ob&ttsspeed=0.85`;
-        const a = new Audio(url);
-        a.play().catch(() => {
-            const fallback = `https://api.voicerss.org/?key=4f9f3f8f8f8f8f8f8f8f8f8f8f8f8f8f&hl=en-gb&src=${enc}`;
-            const f = new Audio(fallback);
-            f.play().catch(() => console.warn('Audio not available'));
-        });
+        
+        const audio = new Audio();
+        audio.preload = 'auto';
+        audio.crossOrigin = 'anonymous';
+        
+        audio.onerror = function() {
+            console.warn('Primary TTS failed, trying fallback...');
+            try {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+            } catch (speechError) {
+                console.error('Speech synthesis failed:', speechError);
+            }
+        };
+        
+        audio.src = url;
+        
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(err => {
+                console.warn('Autoplay blocked, using Speech Synthesis...', err);
+                try {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.85;
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(utterance);
+                } catch (speechError) {
+                    console.error('Speech synthesis failed:', speechError);
+                }
+            });
+        }
     }
 
     cardWrapper.addEventListener('click', e => { if (e.target.closest('.sound-btn')) return; flipCard(); });
@@ -2134,7 +2179,7 @@
     let timeLeft = 5;
     const MAX_TIME = 5;
     let isWaitingForNext = false;
-    let currentPlayedIds = new Set(); // карточки, которые уже были названы диктором
+    let currentPlayedIds = new Set();
 
     function playTickSound() {
         try {
@@ -2226,7 +2271,6 @@
                 const cardData = listenCards[id];
                 
                 if (listenCurrent !== null && id === listenCurrent) {
-                    // Правильный ответ
                     this.classList.add('correct');
                     this.querySelector('.check-mark').textContent = '✓';
                     this.querySelector('.check-mark').style.background = 'rgba(106, 154, 94, 0.85)';
@@ -2245,8 +2289,6 @@
                         if (isGameActive) { startNextRound(); }
                     }, 1000);
                 } else if (listenCurrent !== null && id !== listenCurrent) {
-                    // Неправильный ответ — карточка НЕ добавляется в currentPlayedIds,
-                    // но пользователь может продолжать искать правильную
                     this.classList.add('wrong');
                     this.querySelector('.check-mark').textContent = '✗';
                     this.querySelector('.check-mark').style.background = 'rgba(176, 96, 96, 0.85)';
@@ -2799,13 +2841,11 @@
             const parentTab = this.closest('.tab-content');
 
             if (parentTab) {
-                // Story — текст
                 const storyText = parentTab.querySelector('#storyTextInput');
                 if (storyText) {
                     content = `📖 Jake's Story:\n${storyText.value || '(empty)'}`;
                 }
 
-                // Все поля ввода
                 const inputs = parentTab.querySelectorAll('input[type="text"], textarea');
                 if (inputs.length > 0 && !storyText) {
                     inputs.forEach((input, index) => {
@@ -2817,13 +2857,11 @@
                     });
                 }
 
-                // Flashcards
                 if (tabId === 'tab1') {
                     const currentCollocation = document.getElementById('cardCollocation')?.textContent || '';
                     content = `📸 Current flashcard: ${currentCollocation}`;
                 }
 
-                // Listen & Click
                 if (tabId === 'tabListen') {
                     const score = document.getElementById('listenScore')?.textContent || '';
                     content = `🎧 Listen & Click score: ${score}`;
