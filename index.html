@@ -1,0 +1,2860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collocations | Starlight 7</title>
+
+    <style>
+        /* ---------- SCRAPBOOK BACKGROUND ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            min-height: 100vh;
+            background: #f5f0e8;
+            background-image:
+                repeating-linear-gradient(45deg,
+                    rgba(200, 180, 160, 0.08) 0px,
+                    rgba(200, 180, 160, 0.08) 4px,
+                    transparent 4px,
+                    transparent 8px),
+                radial-gradient(circle at 20% 30%, rgba(245, 240, 235, 0.9) 0%, rgba(220, 210, 195, 0.7) 100%),
+                radial-gradient(circle at 80% 70%, rgba(200, 180, 160, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 10% 90%, rgba(180, 160, 140, 0.1) 0%, transparent 30%);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255, 252, 245, 0.85);
+            backdrop-filter: blur(2px);
+            border-radius: 40px 40px 32px 32px;
+            padding: 28px 28px 40px;
+            box-shadow: 0 20px 60px rgba(60, 40, 20, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(200, 180, 165, 0.3);
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            width: 40px;
+            height: 40px;
+            border-top: 4px solid rgba(180, 160, 140, 0.25);
+            border-left: 4px solid rgba(180, 160, 140, 0.25);
+            border-radius: 8px 0 0 0;
+            pointer-events: none;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+            width: 40px;
+            height: 40px;
+            border-bottom: 4px solid rgba(180, 160, 140, 0.25);
+            border-right: 4px solid rgba(180, 160, 140, 0.25);
+            border-radius: 0 0 8px 0;
+            pointer-events: none;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 3px dashed #d6c9b8;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3d2c1a;
+            letter-spacing: -0.5px;
+        }
+
+        .header .sub {
+            font-size: 0.85rem;
+            color: #8a7a68;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            justify-content: center;
+            border-bottom: 2px solid #e8dfd4;
+            padding-bottom: 12px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6b5b4a;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            background: rgba(235, 225, 215, 0.4);
+            border: 1px solid transparent;
+        }
+
+        .tab-btn:hover {
+            background: rgba(210, 195, 180, 0.4);
+        }
+
+        .tab-btn.active {
+            background: #3d2c1a;
+            color: #f5ede4;
+            box-shadow: 0 4px 12px rgba(60, 40, 20, 0.25);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exercise-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #3d2c1a;
+            margin-bottom: 6px;
+        }
+
+        .exercise-desc {
+            font-size: 0.95rem;
+            color: #6b5b4a;
+            margin-bottom: 18px;
+            font-style: italic;
+        }
+
+        .exercise-box {
+            background: rgba(255, 248, 240, 0.5);
+            border-radius: 24px;
+            padding: 24px 28px;
+            border: 1px solid rgba(200, 180, 165, 0.2);
+            margin-bottom: 10px;
+        }
+
+        /* ---------- MATCH ---------- */
+        .match-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 30px;
+            margin-bottom: 12px;
+        }
+
+        .match-col {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .match-item {
+            padding: 8px 14px;
+            border-radius: 40px;
+            background: rgba(245, 240, 235, 0.7);
+            border: 2px solid #d6c9b8;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            user-select: none;
+        }
+
+        .match-item:hover {
+            background: #ede4d8;
+            transform: scale(1.02);
+        }
+
+        .match-item.selected {
+            background: #3d2c1a;
+            color: #f5ede4;
+            border-color: #3d2c1a;
+            box-shadow: 0 4px 12px rgba(60, 40, 20, 0.25);
+        }
+
+        .match-item.pair-1 { background: #FFB6C1; border-color: #e89aa7; }
+        .match-item.pair-2 { background: #D8A0E8; border-color: #c084d0; }
+        .match-item.pair-3 { background: #87CEEB; border-color: #69b8d9; }
+        .match-item.pair-4 { background: #FFA07A; border-color: #e8865a; }
+        .match-item.pair-5 { background: #FFD700; border-color: #e6c200; }
+        .match-item.pair-6 { background: #90EE90; border-color: #70d070; }
+        .match-item.pair-7 { background: #FF6B6B; border-color: #e05050; }
+        .match-item.pair-8 { background: #40E0D0; border-color: #28c4b4; }
+        .match-item.pair-9 { background: #DDA0DD; border-color: #c888c8; }
+        .match-item.pair-10 { background: #FF7F50; border-color: #e06830; }
+
+        .match-item.matched {
+            opacity: 0.85;
+            cursor: default;
+            border-width: 3px;
+        }
+
+        .match-item.wrong {
+            animation: shake 0.3s ease;
+            border-color: #b06060;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .match-status {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #6b5b4a;
+            padding: 6px 0;
+            min-height: 32px;
+        }
+
+        .match-result {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 0;
+            min-height: 40px;
+        }
+
+        .match-result.correct { color: #3a7a2e; }
+        .match-result.wrong { color: #b04040; }
+
+        .match-reset-btn,
+        .match-check-btn {
+            background: transparent;
+            border: 2px solid #b09a84;
+            color: #4d3a28;
+            padding: 6px 22px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .match-reset-btn:hover,
+        .match-check-btn:hover {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        .match-check-btn {
+            background: #3d2c1a;
+            border-color: #3d2c1a;
+            color: #f5ede4;
+        }
+
+        .match-check-btn:hover {
+            background: #5a4530;
+            border-color: #5a4530;
+        }
+
+        /* ---------- FILL IN ---------- */
+        .fill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .fill-item {
+            padding: 8px 4px;
+            border-bottom: 1px dashed #ddd0c0;
+            font-size: 1rem;
+            line-height: 1.8;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .fill-number {
+            font-weight: 700;
+            color: #8a7a68;
+            min-width: 28px;
+        }
+
+        .fill-input {
+            border: none;
+            border-bottom: 2.5px solid #b09a84;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #3d2c1a;
+            min-width: 90px;
+            max-width: 140px;
+            padding: 0 4px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .fill-input:focus {
+            border-bottom-color: #3d2c1a;
+        }
+
+        .fill-input.correct {
+            border-bottom-color: #6a9a5e;
+            color: #2a6a1a;
+        }
+
+        .fill-input.wrong {
+            border-bottom-color: #b06060;
+            color: #b04040;
+        }
+
+        .fill-input.revealed {
+            border-bottom-color: #3d2c1a;
+            color: #3d2c1a;
+            font-weight: 700;
+        }
+
+        .fill-check-btn,
+        .fill-reset-btn,
+        .fill-show-btn {
+            background: transparent;
+            border: 2px solid #b09a84;
+            color: #4d3a28;
+            padding: 6px 22px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .fill-check-btn:hover,
+        .fill-reset-btn:hover,
+        .fill-show-btn:hover {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        .fill-check-btn {
+            background: #3d2c1a;
+            border-color: #3d2c1a;
+            color: #f5ede4;
+        }
+
+        .fill-check-btn:hover {
+            background: #5a4530;
+            border-color: #5a4530;
+        }
+
+        .fill-result {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 0 4px;
+            min-height: 40px;
+        }
+
+        .fill-result.correct { color: #3a7a2e; }
+        .fill-result.wrong { color: #b04040; }
+        .fill-result.partial { color: #c07a20; }
+
+        /* ---------- COMPLETE ---------- */
+        .complete-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .complete-item {
+            padding: 8px 4px;
+            border-bottom: 1px dashed #ddd0c0;
+            font-size: 1rem;
+            line-height: 1.8;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .complete-number {
+            font-weight: 700;
+            color: #8a7a68;
+            min-width: 28px;
+        }
+
+        .complete-input {
+            border: none;
+            border-bottom: 2.5px solid #b09a84;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #3d2c1a;
+            min-width: 150px;
+            max-width: 220px;
+            padding: 0 4px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .complete-input:focus {
+            border-bottom-color: #3d2c1a;
+        }
+
+        .complete-input.correct {
+            border-bottom-color: #6a9a5e;
+            color: #2a6a1a;
+        }
+
+        .complete-input.wrong {
+            border-bottom-color: #b06060;
+            color: #b04040;
+        }
+
+        .complete-input.revealed {
+            border-bottom-color: #3d2c1a;
+            color: #3d2c1a;
+            font-weight: 700;
+        }
+
+        .complete-check-btn,
+        .complete-reset-btn,
+        .complete-show-btn {
+            background: transparent;
+            border: 2px solid #b09a84;
+            color: #4d3a28;
+            padding: 6px 22px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .complete-check-btn:hover,
+        .complete-reset-btn:hover,
+        .complete-show-btn:hover {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        .complete-check-btn {
+            background: #3d2c1a;
+            border-color: #3d2c1a;
+            color: #f5ede4;
+        }
+
+        .complete-check-btn:hover {
+            background: #5a4530;
+            border-color: #5a4530;
+        }
+
+        .complete-result {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 0 4px;
+            min-height: 40px;
+        }
+
+        .complete-result.correct { color: #3a7a2e; }
+        .complete-result.wrong { color: #b04040; }
+        .complete-result.partial { color: #c07a20; }
+
+        /* ---------- CHOOSE ---------- */
+        .choose-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .choose-item {
+            padding: 8px 4px;
+            border-bottom: 1px dashed #ddd0c0;
+            font-size: 1rem;
+            line-height: 2;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .choose-number {
+            font-weight: 700;
+            color: #8a7a68;
+            min-width: 28px;
+        }
+
+        .choose-option {
+            display: inline-block;
+            padding: 2px 14px;
+            border-radius: 30px;
+            background: rgba(235, 225, 215, 0.5);
+            border: 2px solid #d6c9b8;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .choose-option:hover {
+            background: #d6c9b8;
+            transform: scale(1.02);
+        }
+
+        .choose-option.selected {
+            background: #3d2c1a;
+            border-color: #3d2c1a;
+            color: #f5ede4;
+            box-shadow: 0 4px 12px rgba(60, 40, 20, 0.25);
+        }
+
+        .choose-option.correct-reveal {
+            background: #a8c4a0;
+            border-color: #6a9a5e;
+            color: #1f3a1a;
+        }
+
+        .choose-option.wrong-reveal {
+            background: #d4a0a0;
+            border-color: #b06060;
+            color: #5a1a1a;
+        }
+
+        .choose-option.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .choose-option.disabled:hover { transform: none; }
+
+        .choose-check-btn,
+        .choose-reset-btn,
+        .choose-show-btn {
+            background: transparent;
+            border: 2px solid #b09a84;
+            color: #4d3a28;
+            padding: 6px 22px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .choose-check-btn:hover,
+        .choose-reset-btn:hover,
+        .choose-show-btn:hover {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        .choose-check-btn {
+            background: #3d2c1a;
+            border-color: #3d2c1a;
+            color: #f5ede4;
+        }
+
+        .choose-check-btn:hover {
+            background: #5a4530;
+            border-color: #5a4530;
+        }
+
+        .choose-result {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 0 4px;
+            min-height: 40px;
+        }
+
+        .choose-result.correct { color: #3a7a2e; }
+        .choose-result.wrong { color: #b04040; }
+        .choose-result.partial { color: #c07a20; }
+
+        /* ---------- LISTEN & CLICK ---------- */
+        .listen-timer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 8px 0 12px;
+        }
+
+        .listen-timer {
+            width: 80px;
+            height: 80px;
+            transform: rotate(-90deg);
+        }
+
+        .listen-timer.hidden { display: none; }
+
+        .timer-bg {
+            fill: none;
+            stroke: #e0d6c8;
+            stroke-width: 8;
+        }
+
+        .timer-fg {
+            fill: none;
+            stroke: #3d2c1a;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 339.292;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        .timer-fg.warning { stroke: #d4a040; }
+        .timer-fg.danger {
+            stroke: #b06060;
+            animation: pulse-timer 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-timer {
+            0% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        .timer-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            fill: #3d2c1a;
+            font-family: 'Segoe UI', sans-serif;
+            transform: rotate(90deg);
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+
+        .timer-text.warning { fill: #d4a040; }
+        .timer-text.danger { fill: #b06060; }
+
+        .listen-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin: 16px 0 20px;
+        }
+
+        .listen-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.25s;
+            border: 4px solid transparent;
+            position: relative;
+        }
+
+        .listen-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .listen-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+        }
+
+        .listen-card .listen-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 4px 6px;
+            text-align: center;
+            letter-spacing: 0.3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .listen-card:hover .listen-label { opacity: 1; }
+
+        .listen-card.correct {
+            border-color: #6a9a5e;
+            box-shadow: 0 0 0 4px rgba(106, 154, 94, 0.3);
+        }
+
+        .listen-card.wrong {
+            border-color: #b06060;
+            box-shadow: 0 0 0 4px rgba(176, 96, 96, 0.3);
+            animation: shake 0.4s ease;
+        }
+
+        .listen-card.played {
+            border-color: #b09a84;
+            opacity: 0.6;
+            cursor: default;
+            transform: none;
+        }
+
+        .listen-card.played:hover { transform: none; }
+
+        .listen-card.timeout {
+            animation: pop-card 0.5s ease;
+            border-color: #6a9a5e;
+            box-shadow: 0 0 20px rgba(106, 154, 94, 0.5);
+        }
+
+        @keyframes pop-card {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.15); }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .listen-card .check-mark {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 5;
+        }
+
+        .listen-card.correct .check-mark {
+            opacity: 1;
+            background: rgba(106, 154, 94, 0.85);
+        }
+
+        .listen-card.wrong .check-mark {
+            opacity: 1;
+            background: rgba(176, 96, 96, 0.85);
+        }
+
+        .listen-status {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #3d2c1a;
+            padding: 10px 0;
+            min-height: 48px;
+        }
+
+        .listen-status .highlight {
+            color: #3d2c1a;
+            background: #ede4d8;
+            padding: 2px 16px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .listen-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .listen-btn {
+            background: transparent;
+            border: 2px solid #b09a84;
+            color: #4d3a28;
+            padding: 8px 28px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .listen-btn:hover {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        .listen-btn.primary {
+            background: #3d2c1a;
+            border-color: #3d2c1a;
+            color: #f5ede4;
+        }
+
+        .listen-btn.primary:hover {
+            background: #5a4530;
+            border-color: #5a4530;
+        }
+
+        .listen-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .listen-btn:disabled:hover {
+            background: transparent;
+            color: #4d3a28;
+        }
+
+        .listen-btn.primary:disabled:hover {
+            background: #3d2c1a;
+            color: #f5ede4;
+        }
+
+        .listen-score {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #6b5b4a;
+            margin-top: 6px;
+        }
+
+        /* ---------- FLASHCARD ---------- */
+        .card-wrapper {
+            perspective: 1200px;
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto 20px;
+            min-height: 280px;
+            cursor: pointer;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            border-radius: 28px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: relative;
+            width: 100%;
+            backface-visibility: hidden;
+            border-radius: 28px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fffbf7;
+        }
+
+        .card-front { z-index: 2; }
+
+        .card-front img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 28px;
+        }
+
+        .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotateY(180deg);
+            background: #2d241a;
+            background-image: radial-gradient(circle at 20% 30%, #4a3828, #1f1710);
+            padding: 40px 20px;
+            min-height: 280px;
+            justify-content: center;
+            gap: 12px;
+            border-radius: 28px;
+        }
+
+        .card-back .collocation {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #f5ede4;
+            text-align: center;
+            line-height: 1.3;
+            letter-spacing: 0.5px;
+        }
+
+        .card-back .hint {
+            font-size: 0.8rem;
+            color: #9a8774;
+            margin-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 12px;
+        }
+
+        .card-back .hint i {
+            font-style: normal;
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .sound-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .sound-btn:hover {
+            background: rgba(0, 0, 0, 0.75);
+        }
+        .sound-btn:active {
+            transform: scale(0.88);
+        }
+
+        .flash-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .flash-nav button {
+            background: #3d2c1a;
+            border: none;
+            color: #f5ede4;
+            font-size: 1.6rem;
+            font-weight: 400;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .flash-nav button:hover {
+            background: #5a4530;
+        }
+        .flash-nav button:active {
+            transform: scale(0.94);
+        }
+        .flash-nav button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .flash-nav .page-indicator {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #3d2c1a;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .shuffle-btn {
+            margin-top: 14px;
+            background: transparent;
+            border: 2px solid #b09a84;
+            color: #4d3a28;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .shuffle-btn:hover {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        .counter {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #5a4a3a;
+            background: #ede4d8;
+            display: inline-block;
+            padding: 4px 18px;
+            border-radius: 30px;
+            margin-bottom: 16px;
+        }
+
+        .word-bank {
+            background: #ede4d8;
+            padding: 14px 20px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #3d2c1a;
+        }
+
+        .word-bank span {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 2px 12px;
+            border-radius: 30px;
+            border: 1px solid #d6c9b8;
+        }
+
+        /* ---------- STORY ---------- */
+        .story-collage {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .story-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px 16px;
+            border: 2px solid #d6c9b8;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: rgba(255, 248, 240, 0.5);
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .story-textarea:focus {
+            border-color: #3d2c1a;
+        }
+
+        .record-btn,
+        .stop-btn,
+        .send-btn,
+        .playback-btn {
+            transition: all 0.2s;
+        }
+
+        .record-btn:hover:not(:disabled) {
+            background: #5a4530;
+            transform: scale(1.02);
+        }
+
+        .stop-btn:hover:not(:disabled) {
+            background: #c04040;
+            transform: scale(1.02);
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: #5a8a4e;
+            transform: scale(1.02);
+        }
+
+        .playback-btn:hover:not(:disabled) {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        .record-btn:disabled,
+        .stop-btn:disabled,
+        .send-btn:disabled,
+        .playback-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .record-btn.recording {
+            background: #b06060;
+            animation: pulse-record 0.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-record {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        #timerDisplay {
+            font-variant-numeric: tabular-nums;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #3d2c1a;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        #recordingStatus {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #6b5b4a;
+            margin-top: 10px;
+            min-height: 28px;
+        }
+
+        .story-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .story-reset-btn,
+        .story-copy-btn {
+            background: transparent;
+            border: 2px solid #b09a84;
+            color: #4d3a28;
+            padding: 8px 28px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .story-reset-btn:hover,
+        .story-copy-btn:hover {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        .story-copy-btn {
+            background: #3d2c1a;
+            border-color: #3d2c1a;
+            color: #f5ede4;
+        }
+
+        .story-copy-btn:hover {
+            background: #5a4530;
+            border-color: #5a4530;
+        }
+
+        .story-result {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 12px 0 4px;
+            min-height: 40px;
+        }
+
+        .story-result.correct { color: #3a7a2e; }
+        .story-result.wrong { color: #b04040; }
+        .story-result.partial { color: #c07a20; }
+
+        /* ---------- SHARE BUTTON ---------- */
+        .share-btn {
+            background: transparent;
+            border: 2px solid #b09a84;
+            color: #4d3a28;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .share-btn:hover {
+            background: #b09a84;
+            color: #fff;
+        }
+
+        /* ---------- АДАПТИВ ---------- */
+        @media (max-width: 700px) {
+            .listen-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            .match-container {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px 14px 28px;
+                border-radius: 28px;
+            }
+            .header h1 { font-size: 1.5rem; }
+            .tabs { gap: 4px; }
+            .tab-btn { font-size: 0.75rem; padding: 6px 12px; }
+            .exercise-box { padding: 16px 16px; }
+            .card-back .collocation { font-size: 1.6rem; }
+            .sound-btn { width: 42px; height: 42px; font-size: 1.2rem; bottom: 14px; right: 14px; }
+            .flash-nav button { width: 48px; height: 48px; font-size: 1.3rem; }
+            .word-bank { font-size: 0.75rem; gap: 4px 8px; }
+            .word-bank span { padding: 1px 8px; }
+            .listen-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .listen-card .listen-label { font-size: 0.5rem; padding: 2px 4px; opacity: 1; }
+            .record-btn, .stop-btn, .send-btn, .playback-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .listen-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Collocations</h1>
+        <div class="sub">Starter Module · Starlight 7</div>
+    </div>
+
+    <div class="tabs" id="tabs">
+        <button class="tab-btn active" data-tab="tab1">📸 Flashcards</button>
+        <button class="tab-btn" data-tab="tabListen">🎧 Listen & Click</button>
+        <button class="tab-btn" data-tab="tab2">🔗 Match</button>
+        <button class="tab-btn" data-tab="tab3">✏️ Fill in</button>
+        <button class="tab-btn" data-tab="tab4">📝 Complete</button>
+        <button class="tab-btn" data-tab="tab5">✅ Choose</button>
+        <button class="tab-btn" data-tab="tabStory">📖 Story</button>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- TAB 1: FLASHCARDS -->
+    <!-- ========================================================== -->
+    <div class="tab-content active" id="tab1">
+        <div style="text-align:center; margin-bottom:4px;">
+            <span class="counter" id="counter">1 / 10</span>
+        </div>
+        <div class="card-wrapper" id="cardWrapper">
+            <div class="card" id="card">
+                <div class="card-face card-front" id="cardFront">
+                    <img id="cardImage" src="" alt="Collocation" />
+                    <button class="sound-btn" id="soundBtn" title="Listen">🔊</button>
+                </div>
+                <div class="card-face card-back" id="cardBack">
+                    <div class="collocation" id="cardCollocation">Grow vegetables</div>
+                    <div class="hint">🔄 <i>tap to flip back</i></div>
+                </div>
+            </div>
+        </div>
+        <div class="flash-nav">
+            <button id="prevBtn">◀</button>
+            <span class="page-indicator" id="pageIndicator">1 / 10</span>
+            <button id="nextBtn">▶</button>
+        </div>
+        <button class="shuffle-btn" id="shuffleBtn">🔀 Shuffle</button>
+
+        <!-- Share -->
+        <div style="display:flex; justify-content:flex-end; margin-top:16px; border-top:1px dashed #d6c9b8; padding-top:14px;">
+            <button class="share-btn" data-source="tab1">📨 Share with teacher</button>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- TAB LISTEN: LISTEN & CLICK -->
+    <!-- ========================================================== -->
+    <div class="tab-content" id="tabListen">
+        <div class="exercise-title">🎧 Listen & Click</div>
+        <div class="exercise-desc">Listen to the speaker, then click on the correct picture!</div>
+        <div class="exercise-box">
+            <div class="listen-status" id="listenStatus">
+                <span class="highlight">🎯 Click "Play" to start</span>
+            </div>
+            <div class="listen-timer-container">
+                <svg class="listen-timer hidden" id="listenTimer" viewBox="0 0 120 120">
+                    <circle class="timer-bg" cx="60" cy="60" r="54" />
+                    <circle class="timer-fg" id="timerFg" cx="60" cy="60" r="54" />
+                    <text class="timer-text" id="timerText" x="60" y="67" text-anchor="middle">5</text>
+                </svg>
+            </div>
+            <div class="listen-grid" id="listenGrid"></div>
+            <div class="listen-controls">
+                <button class="listen-btn primary" id="listenPlayBtn">▶ Play</button>
+                <button class="listen-btn" id="listenResetBtn">🔄 Reset</button>
+            </div>
+            <div class="listen-score" id="listenScore">Score: 0 / 0</div>
+
+            <!-- Share -->
+            <div style="display:flex; justify-content:flex-end; margin-top:16px; border-top:1px dashed #d6c9b8; padding-top:14px;">
+                <button class="share-btn" data-source="tabListen">📨 Share with teacher</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- TAB 2: MATCH -->
+    <!-- ========================================================== -->
+    <div class="tab-content" id="tab2">
+        <div class="exercise-title">🔗 Match</div>
+        <div class="exercise-desc">Click a verb on the left, then click a noun on the right to make a collocation.</div>
+        <div class="exercise-box">
+            <div class="match-container" id="matchContainer">
+                <div class="match-col left" id="leftCol">
+                    <div class="match-item" data-id="1">grow</div>
+                    <div class="match-item" data-id="2">raise</div>
+                    <div class="match-item" data-id="3">miss</div>
+                    <div class="match-item" data-id="4">lose</div>
+                    <div class="match-item" data-id="5">get stuck</div>
+                    <div class="match-item" data-id="6">put up</div>
+                    <div class="match-item" data-id="7">make money for</div>
+                    <div class="match-item" data-id="8">try</div>
+                    <div class="match-item" data-id="9">show</div>
+                    <div class="match-item" data-id="10">make</div>
+                </div>
+                <div class="match-col right" id="rightCol"></div>
+            </div>
+            <div class="match-status" id="matchStatus">Select a verb first 👆</div>
+            <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:12px;">
+                <button class="match-reset-btn" id="matchResetBtn">🔄 Reset</button>
+                <button class="match-check-btn" id="matchCheckBtn">✅ Check answers</button>
+            </div>
+            <div class="match-result" id="matchResult"></div>
+
+            <!-- Share -->
+            <div style="display:flex; justify-content:flex-end; margin-top:16px; border-top:1px dashed #d6c9b8; padding-top:14px;">
+                <button class="share-btn" data-source="tab2">📨 Share with teacher</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- TAB 3: FILL IN -->
+    <!-- ========================================================== -->
+    <div class="tab-content" id="tab3">
+        <div class="exercise-title">✏️ Fill in the missing word</div>
+        <div class="exercise-desc">Type the missing word (verb or noun) into each gap.</div>
+        <div class="exercise-box">
+            <div class="fill-group">
+                <div class="fill-item"><span class="fill-number">1.</span> My grandfather loves to <strong>grow</strong> <input type="text" class="fill-input" data-answer="vegetables" placeholder="..." /> in his garden.</div>
+                <div class="fill-item"><span class="fill-number">2.</span> On the farm, we <strong>raise</strong> <input type="text" class="fill-input" data-answer="chickens" placeholder="..." /> for fresh eggs.</div>
+                <div class="fill-item"><span class="fill-number">3.</span> I was late, so I <strong>missed</strong> my <input type="text" class="fill-input" data-answer="flight" placeholder="..." />.</div>
+                <div class="fill-item"><span class="fill-number">4.</span> At the airport, I couldn't find my suitcase. I <strong>lost</strong> my <input type="text" class="fill-input" data-answer="luggage" placeholder="..." />.</div>
+                <div class="fill-item"><span class="fill-number">5.</span> After the rain, the car <strong>got stuck</strong> in <input type="text" class="fill-input" data-answer="mud" placeholder="..." />.</div>
+                <div class="fill-item"><span class="fill-number">6.</span> We need to <strong>put up</strong> <input type="text" class="fill-input" data-answer="posters" placeholder="..." /> to announce the school concert.</div>
+                <div class="fill-item"><span class="fill-number">7.</span> Our class wants to <strong>make money for</strong> <input type="text" class="fill-input" data-answer="charity" placeholder="..." />.</div>
+                <div class="fill-item"><span class="fill-number">8.</span> When you travel, you should <strong>try</strong> <input type="text" class="fill-input" data-answer="local" placeholder="..." /> food.</div>
+                <div class="fill-item"><span class="fill-number">9.</span> In our country, we <strong>show</strong> <input type="text" class="fill-input" data-answer="respect" placeholder="..." /> to older people.</div>
+                <div class="fill-item"><span class="fill-number">10.</span> Planting trees can <strong>make</strong> a <input type="text" class="fill-input" data-answer="difference" placeholder="..." />.</div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px;">
+                <button class="fill-check-btn" id="fillCheckBtn">✅ Check answers</button>
+                <button class="fill-reset-btn" id="fillResetBtn">🔄 Reset</button>
+                <button class="fill-show-btn" id="fillShowBtn">📌 Show all answers</button>
+            </div>
+            <div class="fill-result" id="fillResult"></div>
+
+            <!-- Share -->
+            <div style="display:flex; justify-content:flex-end; margin-top:16px; border-top:1px dashed #d6c9b8; padding-top:14px;">
+                <button class="share-btn" data-source="tab3">📨 Share with teacher</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- TAB 4: COMPLETE -->
+    <!-- ========================================================== -->
+    <div class="tab-content" id="tab4">
+        <div class="exercise-title">📝 Complete the sentences</div>
+        <div class="exercise-desc">Type the whole collocation from the box below into each gap.</div>
+        <div class="word-bank">
+            <span>grow vegetables</span>
+            <span>raise chickens</span>
+            <span>miss a flight</span>
+            <span>lose my luggage</span>
+            <span>get stuck in mud</span>
+            <span>put up posters</span>
+            <span>make money for charity</span>
+            <span>try local food</span>
+            <span>show respect</span>
+            <span>make a difference</span>
+        </div>
+        <div class="exercise-box">
+            <div class="complete-group">
+                <div class="complete-item"><span class="complete-number">1.</span> My grandparents have a big garden. Every summer they <input type="text" class="complete-input" data-answer="grow vegetables" placeholder="..." />.</div>
+                <div class="complete-item"><span class="complete-number">2.</span> If you are late to the airport, you might <input type="text" class="complete-input" data-answer="miss a flight" placeholder="..." />.</div>
+                <div class="complete-item"><span class="complete-number">3.</span> After the heavy rain, our car <input type="text" class="complete-input" data-answer="got stuck in mud" placeholder="..." /> on the country road.</div>
+                <div class="complete-item"><span class="complete-number">4.</span> When I travel, I always <input type="text" class="complete-input" data-answer="try local food" placeholder="..." /> because I want to know the culture.</div>
+                <div class="complete-item"><span class="complete-number">5.</span> Our school organised a bake sale to <input type="text" class="complete-input" data-answer="make money for charity" placeholder="..." />.</div>
+                <div class="complete-item"><span class="complete-number">6.</span> My uncle has a small farm. He <input type="text" class="complete-input" data-answer="raises chickens" placeholder="..." /> and sells eggs at the market.</div>
+                <div class="complete-item"><span class="complete-number">7.</span> At the airport, my bag didn't arrive. I <input type="text" class="complete-input" data-answer="lost my luggage" placeholder="..." />.</div>
+                <div class="complete-item"><span class="complete-number">8.</span> We <input type="text" class="complete-input" data-answer="put up posters" placeholder="..." /> on the notice board to invite people to the party.</div>
+                <div class="complete-item"><span class="complete-number">9.</span> In our family, we <input type="text" class="complete-input" data-answer="show respect" placeholder="..." /> to our parents and grandparents.</div>
+                <div class="complete-item"><span class="complete-number">10.</span> Volunteering at the animal shelter can <input type="text" class="complete-input" data-answer="make a difference" placeholder="..." /> in animals' lives.</div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px;">
+                <button class="complete-check-btn" id="completeCheckBtn">✅ Check answers</button>
+                <button class="complete-reset-btn" id="completeResetBtn">🔄 Reset</button>
+                <button class="complete-show-btn" id="completeShowBtn">📌 Show all answers</button>
+            </div>
+            <div class="complete-result" id="completeResult"></div>
+
+            <!-- Share -->
+            <div style="display:flex; justify-content:flex-end; margin-top:16px; border-top:1px dashed #d6c9b8; padding-top:14px;">
+                <button class="share-btn" data-source="tab4">📨 Share with teacher</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- TAB 5: CHOOSE -->
+    <!-- ========================================================== -->
+    <div class="tab-content" id="tab5">
+        <div class="exercise-title">✅ Choose the correct option</div>
+        <div class="exercise-desc">Click on the correct word to complete each sentence. Click again to change your choice.</div>
+        <div class="exercise-box">
+            <div class="choose-group">
+                <div class="choose-item" data-correct="missed">
+                    <span class="choose-number">1.</span> I was late, so I
+                    <span class="choose-option" data-value="missed">missed</span> /
+                    <span class="choose-option" data-value="lost">lost</span> my flight.
+                </div>
+                <div class="choose-item" data-correct="raise">
+                    <span class="choose-number">2.</span> On the farm, they
+                    <span class="choose-option" data-value="grow">grow</span> /
+                    <span class="choose-option" data-value="raise">raise</span> chickens for eggs.
+                </div>
+                <div class="choose-item" data-correct="put up">
+                    <span class="choose-number">3.</span> We need to
+                    <span class="choose-option" data-value="put up">put up</span> /
+                    <span class="choose-option" data-value="make">make</span> posters on the wall.
+                </div>
+                <div class="choose-item" data-correct="make">
+                    <span class="choose-number">4.</span> She wants to
+                    <span class="choose-option" data-value="make">make</span> /
+                    <span class="choose-option" data-value="show">show</span> a difference in the world.
+                </div>
+                <div class="choose-item" data-correct="try">
+                    <span class="choose-number">5.</span> When you visit a new country, you should
+                    <span class="choose-option" data-value="try">try</span> /
+                    <span class="choose-option" data-value="raise">raise</span> local food.
+                </div>
+                <div class="choose-item" data-correct="show">
+                    <span class="choose-number">6.</span> We should
+                    <span class="choose-option" data-value="show">show</span> /
+                    <span class="choose-option" data-value="make">make</span> respect to our teachers.
+                </div>
+                <div class="choose-item" data-correct="got stuck">
+                    <span class="choose-number">7.</span> After the storm, the car
+                    <span class="choose-option" data-value="got stuck">got stuck</span> /
+                    <span class="choose-option" data-value="lost">lost</span> in mud.
+                </div>
+                <div class="choose-item" data-correct="lost">
+                    <span class="choose-number">8.</span> I can't find my bag. I think I
+                    <span class="choose-option" data-value="missed">missed</span> /
+                    <span class="choose-option" data-value="lost">lost</span> my luggage.
+                </div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px;">
+                <button class="choose-check-btn" id="chooseCheckBtn">✅ Check answers</button>
+                <button class="choose-reset-btn" id="chooseResetBtn">🔄 Reset</button>
+                <button class="choose-show-btn" id="chooseShowBtn">📌 Show all answers</button>
+            </div>
+            <div class="choose-result" id="chooseResult"></div>
+
+            <!-- Share -->
+            <div style="display:flex; justify-content:flex-end; margin-top:16px; border-top:1px dashed #d6c9b8; padding-top:14px;">
+                <button class="share-btn" data-source="tab5">📨 Share with teacher</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- TAB STORY: STORY COLLAGE -->
+    <!-- ========================================================== -->
+    <div class="tab-content" id="tabStory">
+        <div class="exercise-title">📖 Jake's Story</div>
+        <div class="exercise-desc">Look at the collage, then record your voice telling the story. Send it to your teacher!</div>
+
+        <div class="exercise-box">
+            <!-- Коллаж -->
+            <img src="jake_story_collage.png" alt="Jake's Story Collage" class="story-collage" id="storyCollage" onerror="this.style.display='none'; document.getElementById('collageFallback').style.display='block';" />
+
+            <div id="collageFallback" style="display:none; text-align:center; padding:20px; background:#ede4d8; border-radius:16px; margin-bottom:16px;">
+                <p style="font-size:1.1rem; color:#3d2c1a;">
+                    📸 <strong>Jake's Story Collage</strong>
+                </p>
+                <p style="font-size:0.9rem; color:#6b5b4a;">
+                    Please place the file <strong>jake_story_collage.png</strong> in the same folder as this page.
+                </p>
+            </div>
+
+            <!-- Текстовая подсказка -->
+            <div style="margin-top:12px;">
+                <label for="storyTextInput" style="font-weight:600; color:#3d2c1a; display:block; margin-bottom:4px;">✍️ Or write your story here:</label>
+                <textarea id="storyTextInput" class="story-textarea" placeholder="Once upon a time, Jake..."></textarea>
+            </div>
+
+            <!-- Голосовая запись -->
+            <div style="margin-top:16px; padding:16px; background:rgba(235,225,215,0.3); border-radius:16px; border:1px solid #d6c9b8;">
+                <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:center;">
+                    <button id="recordBtn" class="record-btn" style="background:#3d2c1a; border:none; color:#f5ede4; padding:12px 28px; border-radius:40px; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:8px;">
+                        🎤 Record
+                    </button>
+                    <button id="stopBtn" class="stop-btn" disabled style="background:#b06060; border:none; color:#fff; padding:12px 28px; border-radius:40px; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:8px; opacity:0.5;">
+                        ⏹ Stop
+                    </button>
+                    <button id="sendBtn" class="send-btn" disabled style="background:#6a9a5e; border:none; color:#fff; padding:12px 28px; border-radius:40px; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:8px; opacity:0.5;">
+                        📤 Send
+                    </button>
+                    <button id="playbackBtn" class="playback-btn" disabled style="background:transparent; border:2px solid #b09a84; color:#4d3a28; padding:12px 28px; border-radius:40px; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:8px; opacity:0.5;">
+                        ▶ Play
+                    </button>
+                </div>
+
+                <div id="recordingStatus" style="text-align:center; font-size:0.95rem; color:#6b5b4a; margin-top:10px; min-height:28px;">
+                    ⏸ Ready to record
+                </div>
+
+                <div id="timerDisplay" style="text-align:center; font-size:1.6rem; font-weight:700; color:#3d2c1a; margin-top:4px; font-variant-numeric:tabular-nums;">
+                    00:00
+                </div>
+            </div>
+
+            <!-- Кнопки управления -->
+            <div class="story-controls">
+                <button class="story-reset-btn" id="storyResetBtn">🔄 Reset all</button>
+                <button class="story-copy-btn" id="storyCopyBtn">📋 Copy text</button>
+            </div>
+
+            <div class="story-result" id="storyResult"></div>
+
+            <!-- Share -->
+            <div style="display:flex; justify-content:flex-end; margin-top:16px; border-top:1px dashed #d6c9b8; padding-top:14px;">
+                <button class="share-btn" data-source="tabStory">📨 Share with teacher</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- ====== JAVASCRIPT ====== -->
+<!-- ============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+<script>
+    // =============================================================
+    // 1. ВКЛАДКИ (TABS)
+    // =============================================================
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = {
+        tab1: document.getElementById('tab1'),
+        tabListen: document.getElementById('tabListen'),
+        tab2: document.getElementById('tab2'),
+        tab3: document.getElementById('tab3'),
+        tab4: document.getElementById('tab4'),
+        tab5: document.getElementById('tab5'),
+        tabStory: document.getElementById('tabStory')
+    };
+
+    tabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+            tabs.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            Object.keys(contents).forEach(key => {
+                contents[key].classList.toggle('active', key === this.dataset.tab);
+            });
+            // если запись активна — останавливаем
+            if (isRecording) {
+                resetRecorder();
+            }
+        });
+    });
+
+    // =============================================================
+    // 2. FLASHCARDS
+    // =============================================================
+    const cards = [
+        { collocation: 'Grow vegetables', image: '01_grow_vegetables' },
+        { collocation: 'Raise chickens', image: '02_raise_chickens' },
+        { collocation: 'Try local food', image: '03_try_local_food' },
+        { collocation: 'Miss a flight', image: '04_miss_a_flight' },
+        { collocation: 'Lose my luggage', image: '05_lose_my_luggage' },
+        { collocation: 'Get stuck in mud', image: '06_get_stuck_in_mud' },
+        { collocation: 'Put up posters', image: '07_put_up_posters' },
+        { collocation: 'Make money for charity', image: '08_make_money_for_charity' },
+        { collocation: 'Show respect', image: '09_show_respect' },
+        { collocation: 'Make a difference', image: '10_make_a_difference' }
+    ];
+
+    let currentIndex = 0;
+    let isFlipped = false;
+    let cardOrder = cards.map((_, i) => i);
+
+    const cardEl = document.getElementById('card');
+    const cardWrapper = document.getElementById('cardWrapper');
+    const cardImage = document.getElementById('cardImage');
+    const cardCollocation = document.getElementById('cardCollocation');
+    const counter = document.getElementById('counter');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const soundBtn = document.getElementById('soundBtn');
+
+    function checkImageExists(url, callback) {
+        const img = new Image();
+        img.onload = () => callback(true);
+        img.onerror = () => callback(false);
+        img.src = url;
+    }
+
+    function showCard(index) {
+        const idx = cardOrder[index];
+        const data = cards[idx];
+        const base = data.image;
+        const exts = ['.jpg', '.jpeg', '.png', '.webp'];
+        let i = 0;
+
+        function tryNext() {
+            if (i >= exts.length) { cardImage.src = ''; cardImage.alt = 'Not found'; return; }
+            const url = base + exts[i];
+            checkImageExists(url, ok => {
+                if (ok) { cardImage.src = url; cardImage.alt = data.collocation; } else { i++; tryNext(); }
+            });
+        }
+        tryNext();
+
+        cardCollocation.textContent = data.collocation;
+        const total = cardOrder.length;
+        counter.textContent = `${index+1} / ${total}`;
+        pageIndicator.textContent = `${index+1} / ${total}`;
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === total - 1;
+        if (isFlipped) { cardEl.classList.remove('flipped'); isFlipped = false; }
+    }
+
+    function goTo(i) { if (i < 0 || i >= cardOrder.length) return; currentIndex = i; showCard(currentIndex); }
+
+    function nextCard() { if (currentIndex < cardOrder.length - 1) goTo(currentIndex + 1); }
+
+    function prevCard() { if (currentIndex > 0) goTo(currentIndex - 1); }
+
+    function flipCard() { cardEl.classList.toggle('flipped'); isFlipped = !isFlipped; }
+
+    function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+
+    function shuffleCards() { shuffleArray(cardOrder); currentIndex = 0; showCard(currentIndex); }
+
+    function playAudio(text) {
+        const enc = encodeURIComponent(text);
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${enc}&tl=en&client=tw-ob&ttsspeed=0.85`;
+        const a = new Audio(url);
+        a.play().catch(() => {
+            const fallback = `https://api.voicerss.org/?key=4f9f3f8f8f8f8f8f8f8f8f8f8f8f8f8f&hl=en-gb&src=${enc}`;
+            const f = new Audio(fallback);
+            f.play().catch(() => console.warn('Audio not available'));
+        });
+    }
+
+    cardWrapper.addEventListener('click', e => { if (e.target.closest('.sound-btn')) return; flipCard(); });
+    soundBtn.addEventListener('click', e => { e.stopPropagation(); const idx = cardOrder[currentIndex]; playAudio(cards[idx].collocation); });
+    prevBtn.addEventListener('click', prevCard);
+    nextBtn.addEventListener('click', nextCard);
+    shuffleBtn.addEventListener('click', shuffleCards);
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight') nextCard();
+        else if (e.key === 'ArrowLeft') prevCard();
+        else if (e.key === ' ' || e.key === 'Space') { e.preventDefault(); flipCard(); } else if (e.key === 'Enter') { const idx = cardOrder[currentIndex]; playAudio(cards[idx].collocation); }
+    });
+
+    showCard(0);
+
+    // =============================================================
+    // 3. MATCH
+    // =============================================================
+    const rightCol = document.getElementById('rightCol');
+    const rightItems = [
+        { id: 'a', text: 'vegetables', pair: 1 },
+        { id: 'b', text: 'chickens', pair: 2 },
+        { id: 'c', text: 'a flight', pair: 3 },
+        { id: 'd', text: 'my luggage', pair: 4 },
+        { id: 'e', text: 'in mud', pair: 5 },
+        { id: 'f', text: 'posters', pair: 6 },
+        { id: 'g', text: 'charity', pair: 7 },
+        { id: 'h', text: 'local food', pair: 8 },
+        { id: 'i', text: 'respect', pair: 9 },
+        { id: 'j', text: 'a difference', pair: 10 }
+    ];
+
+    function shuffleRightColumn() {
+        const shuffled = [...rightItems].sort(() => Math.random() - 0.5);
+        rightCol.innerHTML = '';
+        shuffled.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'match-item';
+            div.dataset.id = item.id;
+            div.dataset.pair = item.pair;
+            div.textContent = item.text;
+            rightCol.appendChild(div);
+        });
+    }
+    shuffleRightColumn();
+
+    const pairColors = {
+        1: 'pair-1', 2: 'pair-2', 3: 'pair-3', 4: 'pair-4', 5: 'pair-5',
+        6: 'pair-6', 7: 'pair-7', 8: 'pair-8', 9: 'pair-9', 10: 'pair-10'
+    };
+
+    const leftMap = { '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10 };
+    const rightMap = { 'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8, 'i': 9, 'j': 10 };
+
+    let selectedLeft = null;
+    const matchStatus = document.getElementById('matchStatus');
+    const matchResult = document.getElementById('matchResult');
+
+    function playMatchCorrectSound() {
+        try {
+            const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 523;
+            osc.type = 'sine';
+            gain.gain.value = 0.15;
+            osc.start();
+            setTimeout(() => { osc.frequency.value = 659; }, 100);
+            osc.stop(audioCtx.currentTime + 0.2);
+        } catch (e) {}
+    }
+
+    function playMatchWrongSound() {
+        try {
+            const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 300;
+            osc.type = 'sawtooth';
+            gain.gain.value = 0.1;
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        } catch (e) {}
+    }
+
+    function playMatchWinSound() {
+        try {
+            const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            const notes = [523, 587, 659, 784];
+            notes.forEach((freq, i) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.value = freq;
+                    osc.type = 'sine';
+                    gain.gain.value = 0.12;
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }, i * 120);
+            });
+        } catch (e) {}
+    }
+
+    document.querySelectorAll('.match-col.left .match-item').forEach(el => {
+        el.addEventListener('click', function() {
+            if (this.classList.contains('matched')) return;
+            document.querySelectorAll('.match-item.selected').forEach(item => item.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedLeft = this;
+            matchStatus.textContent = 'Now click the correct noun on the right 👉';
+        });
+    });
+
+    function attachRightListeners() {
+        document.querySelectorAll('.match-col.right .match-item').forEach(el => {
+            el.addEventListener('click', function() {
+                if (this.classList.contains('matched')) return;
+                if (!selectedLeft) {
+                    matchStatus.textContent = '👆 Select a verb first!';
+                    return;
+                }
+                const leftId = selectedLeft.dataset.id;
+                const rightId = this.dataset.id;
+                const leftPair = leftMap[leftId];
+                const rightPair = rightMap[rightId];
+
+                if (leftPair === rightPair) {
+                    const pairClass = pairColors[leftPair];
+                    selectedLeft.classList.remove('selected');
+                    selectedLeft.classList.add('matched', pairClass);
+                    this.classList.add('matched', pairClass);
+                    matchStatus.textContent = '✅ Correct! Select another verb.';
+                    playMatchCorrectSound();
+                    selectedLeft = null;
+                    checkMatchCompletion();
+                } else {
+                    this.classList.add('wrong');
+                    matchStatus.textContent = '❌ Wrong! Try again.';
+                    playMatchWrongSound();
+                    setTimeout(() => { this.classList.remove('wrong'); }, 500);
+                }
+            });
+        });
+    }
+
+    attachRightListeners();
+
+    function checkMatchCompletion() {
+        const totalItems = document.querySelectorAll('.match-col.left .match-item').length;
+        const matchedItems = document.querySelectorAll('.match-col.left .match-item.matched').length;
+        if (matchedItems === totalItems) {
+            matchResult.textContent = '🎉 Perfect! All collocations matched!';
+            matchResult.className = 'match-result correct';
+            playMatchWinSound();
+        }
+    }
+
+    document.getElementById('matchResetBtn').addEventListener('click', function() {
+        document.querySelectorAll('.match-item').forEach(el => {
+            el.classList.remove('selected', 'matched', 'wrong', 'pair-1', 'pair-2', 'pair-3', 'pair-4', 'pair-5', 'pair-6', 'pair-7', 'pair-8', 'pair-9', 'pair-10');
+        });
+        selectedLeft = null;
+        matchStatus.textContent = 'Select a verb first 👆';
+        matchResult.textContent = '';
+        matchResult.className = 'match-result';
+        shuffleRightColumn();
+        attachRightListeners();
+    });
+
+    document.getElementById('matchCheckBtn').addEventListener('click', function() {
+        let correct = 0;
+        let total = 0;
+        document.querySelectorAll('.match-col.left .match-item').forEach(el => {
+            const id = el.dataset.id;
+            const expectedPair = leftMap[id];
+            const rightEl = document.querySelector(`.match-col.right .match-item[data-pair="${expectedPair}"]`);
+            if (el.classList.contains('matched') && rightEl && rightEl.classList.contains('matched')) {
+                correct++;
+            }
+            total++;
+        });
+        if (correct === total) {
+            matchResult.textContent = `🎉 Perfect! All ${total} collocations matched!`;
+            matchResult.className = 'match-result correct';
+            playMatchWinSound();
+        } else {
+            matchResult.textContent = `📝 ${correct} / ${total} correct. Keep going!`;
+            matchResult.className = 'match-result wrong';
+        }
+    });
+
+    // =============================================================
+    // 4. FILL IN
+    // =============================================================
+    const fillInputs = document.querySelectorAll('.fill-input');
+    const fillCheckBtn = document.getElementById('fillCheckBtn');
+    const fillResetBtn = document.getElementById('fillResetBtn');
+    const fillShowBtn = document.getElementById('fillShowBtn');
+    const fillResult = document.getElementById('fillResult');
+
+    fillCheckBtn.addEventListener('click', function() {
+        let correct = 0;
+        let total = fillInputs.length;
+        fillInputs.forEach(input => {
+            const userAnswer = input.value.trim().toLowerCase();
+            const correctAnswer = input.dataset.answer.toLowerCase();
+            input.classList.remove('correct', 'wrong', 'revealed');
+            if (userAnswer === '') {
+                input.classList.add('wrong');
+            } else if (userAnswer === correctAnswer) {
+                input.classList.add('correct');
+                correct++;
+            } else {
+                input.classList.add('wrong');
+            }
+        });
+        if (correct === total) {
+            fillResult.textContent = `🎉 Perfect! All ${total} answers are correct!`;
+            fillResult.className = 'fill-result correct';
+        } else if (correct === 0) {
+            fillResult.textContent = `❌ No correct answers. Try again!`;
+            fillResult.className = 'fill-result wrong';
+        } else {
+            fillResult.textContent = `📝 ${correct} / ${total} correct. Keep going!`;
+            fillResult.className = 'fill-result partial';
+        }
+    });
+
+    fillResetBtn.addEventListener('click', function() {
+        fillInputs.forEach(input => { input.value = ''; input.classList.remove('correct', 'wrong', 'revealed'); });
+        fillResult.textContent = '';
+        fillResult.className = 'fill-result';
+    });
+
+    fillShowBtn.addEventListener('click', function() {
+        fillInputs.forEach(input => {
+            input.value = input.dataset.answer;
+            input.classList.remove('correct', 'wrong');
+            input.classList.add('revealed');
+        });
+        fillResult.textContent = '📌 All answers revealed. Copy them if you need!';
+        fillResult.className = 'fill-result partial';
+    });
+
+    fillInputs.forEach((input, index) => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const next = fillInputs[index + 1];
+                if (next) { next.focus(); } else { fillCheckBtn.click(); }
+            }
+        });
+    });
+
+    // =============================================================
+    // 5. COMPLETE
+    // =============================================================
+    const completeInputs = document.querySelectorAll('.complete-input');
+    const completeCheckBtn = document.getElementById('completeCheckBtn');
+    const completeResetBtn = document.getElementById('completeResetBtn');
+    const completeShowBtn = document.getElementById('completeShowBtn');
+    const completeResult = document.getElementById('completeResult');
+
+    completeCheckBtn.addEventListener('click', function() {
+        let correct = 0;
+        let total = completeInputs.length;
+        completeInputs.forEach(input => {
+            const userAnswer = input.value.trim().toLowerCase();
+            const correctAnswer = input.dataset.answer.toLowerCase();
+            input.classList.remove('correct', 'wrong', 'revealed');
+            if (userAnswer === '') {
+                input.classList.add('wrong');
+            } else if (userAnswer === correctAnswer) {
+                input.classList.add('correct');
+                correct++;
+            } else {
+                input.classList.add('wrong');
+            }
+        });
+        if (correct === total) {
+            completeResult.textContent = `🎉 Perfect! All ${total} answers are correct!`;
+            completeResult.className = 'complete-result correct';
+        } else if (correct === 0) {
+            completeResult.textContent = `❌ No correct answers. Try again!`;
+            completeResult.className = 'complete-result wrong';
+        } else {
+            completeResult.textContent = `📝 ${correct} / ${total} correct. Keep going!`;
+            completeResult.className = 'complete-result partial';
+        }
+    });
+
+    completeResetBtn.addEventListener('click', function() {
+        completeInputs.forEach(input => { input.value = ''; input.classList.remove('correct', 'wrong', 'revealed'); });
+        completeResult.textContent = '';
+        completeResult.className = 'complete-result';
+    });
+
+    completeShowBtn.addEventListener('click', function() {
+        completeInputs.forEach(input => {
+            input.value = input.dataset.answer;
+            input.classList.remove('correct', 'wrong');
+            input.classList.add('revealed');
+        });
+        completeResult.textContent = '📌 All answers revealed. Copy them if you need!';
+        completeResult.className = 'complete-result partial';
+    });
+
+    completeInputs.forEach((input, index) => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const next = completeInputs[index + 1];
+                if (next) { next.focus(); } else { completeCheckBtn.click(); }
+            }
+        });
+    });
+
+    // =============================================================
+    // 6. CHOOSE
+    // =============================================================
+    const chooseItems = document.querySelectorAll('.choose-item');
+    const chooseCheckBtn = document.getElementById('chooseCheckBtn');
+    const chooseResetBtn = document.getElementById('chooseResetBtn');
+    const chooseShowBtn = document.getElementById('chooseShowBtn');
+    const chooseResult = document.getElementById('chooseResult');
+
+    chooseItems.forEach(item => {
+        const options = item.querySelectorAll('.choose-option');
+        options.forEach(opt => {
+            opt.addEventListener('click', function() {
+                if (this.classList.contains('disabled')) return;
+                options.forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    });
+
+    chooseCheckBtn.addEventListener('click', function() {
+        let correct = 0;
+        let total = chooseItems.length;
+        chooseItems.forEach(item => {
+            const correctAnswer = item.dataset.correct;
+            const selected = item.querySelector('.choose-option.selected');
+            const allOptions = item.querySelectorAll('.choose-option');
+            allOptions.forEach(o => { o.classList.remove('correct-reveal', 'wrong-reveal', 'disabled'); });
+            if (selected) {
+                const value = selected.dataset.value;
+                if (value === correctAnswer) {
+                    selected.classList.add('correct-reveal');
+                    correct++;
+                } else {
+                    selected.classList.add('wrong-reveal');
+                    allOptions.forEach(o => {
+                        if (o.dataset.value === correctAnswer) {
+                            o.classList.add('correct-reveal');
+                        }
+                    });
+                }
+                allOptions.forEach(o => o.classList.add('disabled'));
+            } else {
+                allOptions.forEach(o => { o.classList.add('disabled'); });
+                allOptions.forEach(o => {
+                    if (o.dataset.value === correctAnswer) {
+                        o.classList.add('correct-reveal');
+                    }
+                });
+            }
+        });
+        if (correct === total) {
+            chooseResult.textContent = `🎉 Perfect! All ${total} answers are correct!`;
+            chooseResult.className = 'choose-result correct';
+        } else if (correct === 0) {
+            chooseResult.textContent = `❌ No correct answers. Try again!`;
+            chooseResult.className = 'choose-result wrong';
+        } else {
+            chooseResult.textContent = `📝 ${correct} / ${total} correct. Keep going!`;
+            chooseResult.className = 'choose-result partial';
+        }
+    });
+
+    chooseResetBtn.addEventListener('click', function() {
+        chooseItems.forEach(item => {
+            const options = item.querySelectorAll('.choose-option');
+            options.forEach(o => { o.classList.remove('selected', 'correct-reveal', 'wrong-reveal', 'disabled'); });
+        });
+        chooseResult.textContent = '';
+        chooseResult.className = 'choose-result';
+    });
+
+    chooseShowBtn.addEventListener('click', function() {
+        chooseItems.forEach(item => {
+            const correctAnswer = item.dataset.correct;
+            const options = item.querySelectorAll('.choose-option');
+            options.forEach(o => {
+                o.classList.remove('selected', 'correct-reveal', 'wrong-reveal', 'disabled');
+                if (o.dataset.value === correctAnswer) {
+                    o.classList.add('correct-reveal');
+                }
+                o.classList.add('disabled');
+            });
+        });
+        chooseResult.textContent = '📌 All answers revealed. Copy them if you need!';
+        chooseResult.className = 'choose-result partial';
+    });
+
+    // =============================================================
+    // 7. LISTEN & CLICK (ИСПРАВЛЕНО: без повторов)
+    // =============================================================
+    const listenGrid = document.getElementById('listenGrid');
+    const listenStatus = document.getElementById('listenStatus');
+    const listenScore = document.getElementById('listenScore');
+    const listenPlayBtn = document.getElementById('listenPlayBtn');
+    const listenResetBtn = document.getElementById('listenResetBtn');
+    const listenTimer = document.getElementById('listenTimer');
+    const timerFg = document.getElementById('timerFg');
+    const timerText = document.getElementById('timerText');
+
+    const listenCards = cards.map((c, i) => ({ ...c, id: i, played: false }));
+
+    let listenCurrent = null;
+    let listenCorrect = 0;
+    let isGameActive = false;
+    let timerInterval = null;
+    let timeLeft = 5;
+    const MAX_TIME = 5;
+    let isWaitingForNext = false;
+    let currentPlayedIds = new Set(); // карточки, которые уже были названы диктором
+
+    function playTickSound() {
+        try {
+            const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 800;
+            osc.type = 'sine';
+            gain.gain.value = 0.12;
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.06);
+        } catch (e) {}
+    }
+
+    function playEndSound() {
+        try {
+            const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 600;
+            osc.type = 'square';
+            gain.gain.value = 0.15;
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.25);
+            setTimeout(() => {
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc2.frequency.value = 400;
+                osc2.type = 'square';
+                gain2.gain.value = 0.15;
+                osc2.start();
+                osc2.stop(audioCtx.currentTime + 0.3);
+            }, 200);
+        } catch (e) {}
+    }
+
+    function playCorrectSound() {
+        try {
+            const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 523;
+            osc.type = 'sine';
+            gain.gain.value = 0.15;
+            osc.start();
+            setTimeout(() => { osc.frequency.value = 659; }, 100);
+            osc.stop(audioCtx.currentTime + 0.2);
+        } catch (e) {}
+    }
+
+    function playWrongSound() {
+        try {
+            const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 300;
+            osc.type = 'sawtooth';
+            gain.gain.value = 0.1;
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        } catch (e) {}
+    }
+
+    function renderListenGrid() {
+        const shuffled = [...listenCards].sort(() => Math.random() - 0.5);
+        listenGrid.innerHTML = '';
+        shuffled.forEach((card) => {
+            const div = document.createElement('div');
+            div.className = 'listen-card';
+            div.dataset.id = card.id;
+            div.innerHTML = `
+                <img src="${card.image}.jpg" alt="${card.collocation}" onerror="this.src='${card.image}.png'" />
+                <div class="listen-label">${card.collocation}</div>
+                <div class="check-mark"></div>
+            `;
+            div.addEventListener('click', function() {
+                if (!isGameActive || currentPlayedIds.has(parseInt(this.dataset.id)) || isWaitingForNext) return;
+                const id = parseInt(this.dataset.id);
+                const cardData = listenCards[id];
+                
+                if (listenCurrent !== null && id === listenCurrent) {
+                    // Правильный ответ
+                    this.classList.add('correct');
+                    this.querySelector('.check-mark').textContent = '✓';
+                    this.querySelector('.check-mark').style.background = 'rgba(106, 154, 94, 0.85)';
+                    this.classList.add('played');
+                    listenCards[id].played = true;
+                    currentPlayedIds.add(id);
+                    listenCorrect++;
+                    listenStatus.innerHTML = `✅ Correct! That's <span class="highlight">${cardData.collocation}</span>`;
+                    playCorrectSound();
+                    listenCurrent = null;
+                    stopTimer();
+                    updateListenScore();
+                    isWaitingForNext = true;
+                    setTimeout(() => {
+                        isWaitingForNext = false;
+                        if (isGameActive) { startNextRound(); }
+                    }, 1000);
+                } else if (listenCurrent !== null && id !== listenCurrent) {
+                    // Неправильный ответ — карточка НЕ добавляется в currentPlayedIds,
+                    // но пользователь может продолжать искать правильную
+                    this.classList.add('wrong');
+                    this.querySelector('.check-mark').textContent = '✗';
+                    this.querySelector('.check-mark').style.background = 'rgba(176, 96, 96, 0.85)';
+                    playWrongSound();
+                    setTimeout(() => {
+                        this.classList.remove('wrong');
+                        this.querySelector('.check-mark').textContent = '';
+                    }, 600);
+                    listenStatus.innerHTML = `❌ Wrong! Try to find <span class="highlight">${listenCards[listenCurrent].collocation}</span>`;
+                }
+            });
+            listenGrid.appendChild(div);
+        });
+    }
+
+    function updateListenScore() {
+        const total = currentPlayedIds.size;
+        listenScore.textContent = `Score: ${listenCorrect} / ${total}`;
+    }
+
+    function checkListenComplete() {
+        const allPlayed = listenCards.every(c => c.played);
+        if (allPlayed && listenCards.length > 0) {
+            isGameActive = false;
+            listenPlayBtn.textContent = '▶ Play';
+            listenStatus.innerHTML = `🎉 <span class="highlight">Amazing!</span> You found all ${listenCards.length} collocations! Correct: ${listenCorrect} / ${listenCards.length}`;
+            listenPlayBtn.disabled = false;
+            listenTimer.classList.add('hidden');
+            return true;
+        }
+        return false;
+    }
+
+    function stopTimer() {
+        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+        timeLeft = MAX_TIME;
+        timerText.textContent = timeLeft;
+        timerFg.style.strokeDashoffset = 0;
+        timerFg.classList.remove('warning', 'danger');
+        timerText.classList.remove('warning', 'danger');
+        listenTimer.classList.add('hidden');
+    }
+
+    function startTimer() {
+        stopTimer();
+        timeLeft = MAX_TIME;
+        listenTimer.classList.remove('hidden');
+        timerText.textContent = timeLeft;
+        timerFg.style.strokeDashoffset = 0;
+        timerFg.classList.remove('warning', 'danger');
+        timerText.classList.remove('warning', 'danger');
+
+        const circumference = 339.292;
+
+        timerInterval = setInterval(() => {
+            timeLeft -= 0.3;
+            if (timeLeft < 0) timeLeft = 0;
+
+            const progress = 1 - (timeLeft / MAX_TIME);
+            const offset = circumference * progress;
+            timerFg.style.strokeDashoffset = offset;
+
+            const displayTime = Math.ceil(timeLeft);
+            timerText.textContent = displayTime;
+
+            if (timeLeft <= 1.5) {
+                timerFg.classList.add('danger');
+                timerText.classList.add('danger');
+                timerFg.classList.remove('warning');
+                timerText.classList.remove('warning');
+                playTickSound();
+            } else if (timeLeft <= 3) {
+                timerFg.classList.add('warning');
+                timerText.classList.add('warning');
+                timerFg.classList.remove('danger');
+                timerText.classList.remove('danger');
+            } else {
+                timerFg.classList.remove('warning', 'danger');
+                timerText.classList.remove('warning', 'danger');
+            }
+
+            if (timeLeft <= 0) {
+                stopTimer();
+                if (isGameActive && listenCurrent !== null) {
+                    const correctCard = listenGrid.querySelector(`.listen-card[data-id="${listenCurrent}"]`);
+                    if (correctCard && !correctCard.classList.contains('played')) {
+                        correctCard.classList.add('correct', 'timeout');
+                        correctCard.querySelector('.check-mark').textContent = '✓';
+                        correctCard.querySelector('.check-mark').style.background = 'rgba(106, 154, 94, 0.85)';
+                        correctCard.classList.add('played');
+                        listenCards[listenCurrent].played = true;
+                        currentPlayedIds.add(listenCurrent);
+                        playEndSound();
+                        listenStatus.innerHTML = `⏰ Time's up! The correct answer was <span class="highlight">${listenCards[listenCurrent].collocation}</span>`;
+                        listenCurrent = null;
+                        updateListenScore();
+                        setTimeout(() => { correctCard.classList.remove('timeout'); }, 600);
+                        if (!checkListenComplete() && isGameActive) {
+                            isWaitingForNext = true;
+                            setTimeout(() => {
+                                isWaitingForNext = false;
+                                if (isGameActive) { startNextRound(); }
+                            }, 1500);
+                        } else {
+                            isGameActive = false;
+                            listenPlayBtn.textContent = '▶ Play';
+                            listenPlayBtn.disabled = false;
+                        }
+                    }
+                }
+            }
+        }, 300);
+    }
+
+    function startNextRound() {
+        if (!isGameActive) return;
+        if (checkListenComplete()) return;
+
+        const unplayed = listenCards.filter(c => !c.played);
+        if (unplayed.length === 0) {
+            checkListenComplete();
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * unplayed.length);
+        const selected = unplayed[randomIndex];
+        listenCurrent = selected.id;
+
+        listenStatus.innerHTML = `🔊 Listening... Find <span class="highlight">${selected.collocation}</span>`;
+        playAudio(selected.collocation);
+        startTimer();
+    }
+
+    function startGame() {
+        if (isGameActive) {
+            isGameActive = false;
+            stopTimer();
+            listenPlayBtn.textContent = '▶ Play';
+            listenPlayBtn.disabled = false;
+            listenStatus.innerHTML = '<span class="highlight">⏸ Paused. Click "Play" to continue</span>';
+            return;
+        }
+
+        const allPlayed = listenCards.every(c => c.played);
+        if (allPlayed && listenCards.length > 0) {
+            listenStatus.innerHTML = `🎉 <span class="highlight">All done!</span> You found all collocations! Correct: ${listenCorrect} / ${listenCards.length}`;
+            return;
+        }
+
+        isGameActive = true;
+        listenPlayBtn.textContent = '⏹ Stop';
+        listenPlayBtn.disabled = false;
+
+        const unplayed = listenCards.filter(c => !c.played);
+        if (unplayed.length > 0) {
+            isWaitingForNext = false;
+            startNextRound();
+        } else {
+            checkListenComplete();
+        }
+    }
+
+    function resetListenGame() {
+        stopTimer();
+        isGameActive = false;
+        isWaitingForNext = false;
+        listenCards.forEach(c => c.played = false);
+        currentPlayedIds.clear();
+        listenCurrent = null;
+        listenCorrect = 0;
+        listenPlayBtn.textContent = '▶ Play';
+        listenPlayBtn.disabled = false;
+        listenStatus.innerHTML = '<span class="highlight">🎯 Click "Play" to start</span>';
+        listenScore.textContent = 'Score: 0 / 0';
+        listenTimer.classList.add('hidden');
+        renderListenGrid();
+    }
+
+    listenPlayBtn.addEventListener('click', startGame);
+    listenResetBtn.addEventListener('click', resetListenGame);
+
+    renderListenGrid();
+    listenScore.textContent = 'Score: 0 / 0';
+    listenTimer.classList.add('hidden');
+
+    // =============================================================
+    // 8. STORY — ГОЛОСОВАЯ ЗАПИСЬ С КОНВЕРТАЦИЕЙ В MP3
+    // =============================================================
+    const recordBtn = document.getElementById('recordBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const sendBtn = document.getElementById('sendBtn');
+    const playbackBtn = document.getElementById('playbackBtn');
+    const recordingStatus = document.getElementById('recordingStatus');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const storyTextInput = document.getElementById('storyTextInput');
+    const storyResetBtn = document.getElementById('storyResetBtn');
+    const storyCopyBtn = document.getElementById('storyCopyBtn');
+    const storyResult = document.getElementById('storyResult');
+
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let recordedBlob = null;
+    let recordedMp3Blob = null;
+    let audioUrl = null;
+    let audioElement = null;
+    let timerIntervalStory = null;
+    let seconds = 0;
+    let isRecording = false;
+
+    function formatTime(sec) {
+        const mins = String(Math.floor(sec / 60)).padStart(2, '0');
+        const secs = String(Math.floor(sec % 60)).padStart(2, '0');
+        return `${mins}:${secs}`;
+    }
+
+    function updateTimer() {
+        timerDisplay.textContent = formatTime(seconds);
+    }
+
+    function startTimerStory() {
+        seconds = 0;
+        updateTimer();
+        if (timerIntervalStory) clearInterval(timerIntervalStory);
+        timerIntervalStory = setInterval(() => {
+            seconds++;
+            updateTimer();
+        }, 1000);
+    }
+
+    function stopTimerStory() {
+        if (timerIntervalStory) {
+            clearInterval(timerIntervalStory);
+            timerIntervalStory = null;
+        }
+    }
+
+    async function convertWebMToMp3(webmBlob) {
+        try {
+            const arrayBuffer = await webmBlob.arrayBuffer();
+            const audioCtx = new AudioContext();
+            const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+            const wavBlob = audioBufferToWav(audioBuffer);
+            const mp3Blob = await encodeWavToMp3(wavBlob);
+            return mp3Blob;
+        } catch (error) {
+            console.warn('MP3 conversion failed, falling back to WebM:', error);
+            return webmBlob;
+        }
+    }
+
+    function audioBufferToWav(buffer) {
+        const numberOfChannels = 1;
+        const sampleRate = buffer.sampleRate;
+        const format = 1;
+        const bitDepth = 16;
+        const bytesPerSample = bitDepth / 8;
+        const blockAlign = numberOfChannels * bytesPerSample;
+        const dataSize = buffer.length * blockAlign;
+        const bufferSize = 44 + dataSize;
+        const arrayBuffer = new ArrayBuffer(bufferSize);
+        const view = new DataView(arrayBuffer);
+
+        function writeString(offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        writeString(0, 'RIFF');
+        view.setUint32(4, 36 + dataSize, true);
+        writeString(8, 'WAVE');
+        writeString(12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, format, true);
+        view.setUint16(22, numberOfChannels, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * blockAlign, true);
+        view.setUint16(32, blockAlign, true);
+        view.setUint16(34, bitDepth, true);
+        writeString(36, 'data');
+        view.setUint32(40, dataSize, true);
+
+        const channelData = buffer.getChannelData(0);
+        let offset = 44;
+        for (let i = 0; i < channelData.length; i++) {
+            const sample = Math.max(-1, Math.min(1, channelData[i]));
+            const int16 = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+            view.setInt16(offset, int16, true);
+            offset += 2;
+        }
+
+        return new Blob([arrayBuffer], { type: 'audio/wav' });
+    }
+
+    function encodeWavToMp3(wavBlob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const wavData = new Uint8Array(reader.result);
+                const wav = parseWav(wavData);
+                if (!wav) {
+                    reject(new Error('Failed to parse WAV'));
+                    return;
+                }
+                const mp3encoder = new lamejs.Mp3Encoder(1, wav.sampleRate, 128);
+                const samples = new Int16Array(wav.data.buffer);
+                const mp3Data = [];
+                const blockSize = 1152;
+                for (let i = 0; i < samples.length; i += blockSize) {
+                    const chunk = samples.subarray(i, i + blockSize);
+                    const mp3buf = mp3encoder.encodeBuffer(chunk);
+                    if (mp3buf.length > 0) {
+                        mp3Data.push(mp3buf);
+                    }
+                }
+                const end = mp3encoder.flush();
+                if (end.length > 0) {
+                    mp3Data.push(end);
+                }
+                const mp3Blob = new Blob(mp3Data, { type: 'audio/mpeg' });
+                resolve(mp3Blob);
+            };
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(wavBlob);
+        });
+    }
+
+    function parseWav(wavData) {
+        const view = new DataView(wavData.buffer);
+        let offset = 0;
+        if (wavData.length < 44) return null;
+        if (view.getUint32(0) !== 0x52494646) return null;
+        if (view.getUint32(8) !== 0x57415645) return null;
+        offset = 12;
+        let sampleRate = 44100;
+        let dataOffset = 44;
+        let dataSize = wavData.length - 44;
+        while (offset < wavData.length) {
+            const chunkId = view.getUint32(offset);
+            const chunkSize = view.getUint32(offset + 4);
+            if (chunkId === 0x666d7420) {
+                sampleRate = view.getUint32(offset + 8, true);
+            } else if (chunkId === 0x64617461) {
+                dataOffset = offset + 8;
+                dataSize = chunkSize;
+            }
+            offset += 8 + chunkSize;
+            if (chunkSize % 2 === 1) offset += 1;
+        }
+        const data = new Int16Array(wavData.buffer, dataOffset, dataSize / 2);
+        return { sampleRate, data };
+    }
+
+    function resetRecorder() {
+        stopTimerStory();
+        isRecording = false;
+        audioChunks = [];
+        recordedBlob = null;
+        recordedMp3Blob = null;
+        if (audioUrl) {
+            URL.revokeObjectURL(audioUrl);
+            audioUrl = null;
+        }
+        if (audioElement) {
+            audioElement.pause();
+            audioElement = null;
+        }
+        recordBtn.disabled = false;
+        recordBtn.classList.remove('recording');
+        recordBtn.textContent = '🎤 Record';
+        stopBtn.disabled = true;
+        sendBtn.disabled = true;
+        playbackBtn.disabled = true;
+        recordingStatus.textContent = '⏸ Ready to record';
+        timerDisplay.textContent = '00:00';
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+        }
+        mediaRecorder = null;
+    }
+
+    function canShareFile() {
+        return navigator.canShare && navigator.canShare({ files: [] });
+    }
+
+    recordBtn.addEventListener('click', async function() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = async () => {
+                const webmBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                recordedBlob = webmBlob;
+
+                recordingStatus.textContent = '⏳ Converting to MP3...';
+                recordedMp3Blob = await convertWebMToMp3(webmBlob);
+                audioUrl = URL.createObjectURL(recordedMp3Blob);
+                audioElement = new Audio(audioUrl);
+
+                sendBtn.disabled = false;
+                playbackBtn.disabled = false;
+                recordingStatus.textContent = '✅ Recording saved as MP3! Click "Play" to listen or "Send" to share.';
+                stopTimerStory();
+                recordBtn.disabled = false;
+                recordBtn.classList.remove('recording');
+                recordBtn.textContent = '🎤 Record';
+                isRecording = false;
+
+                stream.getTracks().forEach(track => track.stop());
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            recordBtn.disabled = true;
+            recordBtn.classList.add('recording');
+            recordBtn.textContent = '⏺ Recording...';
+            stopBtn.disabled = false;
+            sendBtn.disabled = true;
+            playbackBtn.disabled = true;
+            recordingStatus.textContent = '🔴 Recording... Speak clearly!';
+            startTimerStory();
+
+        } catch (error) {
+            console.error('Microphone error:', error);
+            recordingStatus.textContent = '❌ Cannot access microphone. Please allow microphone access.';
+            storyResult.textContent = '❌ Microphone access denied. Please allow it in browser settings.';
+            storyResult.className = 'story-result wrong';
+        }
+    });
+
+    stopBtn.addEventListener('click', function() {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            stopBtn.disabled = true;
+            recordingStatus.textContent = '⏹ Stopping...';
+        }
+    });
+
+    playbackBtn.addEventListener('click', function() {
+        if (audioElement && audioUrl) {
+            if (audioElement.paused) {
+                audioElement.play();
+                playbackBtn.textContent = '⏸ Pause';
+                recordingStatus.textContent = '▶ Playing...';
+            } else {
+                audioElement.pause();
+                playbackBtn.textContent = '▶ Play';
+                recordingStatus.textContent = '⏸ Paused';
+            }
+        }
+    });
+
+    if (audioElement) {
+        audioElement.addEventListener('ended', () => {
+            playbackBtn.textContent = '▶ Play';
+            recordingStatus.textContent = '⏸ Playback finished';
+        });
+    }
+
+    sendBtn.addEventListener('click', async function() {
+        if (!recordedMp3Blob && !recordedBlob) {
+            storyResult.textContent = '❌ No recording to send. Please record first.';
+            storyResult.className = 'story-result wrong';
+            return;
+        }
+
+        const blobToSend = recordedMp3Blob || recordedBlob;
+        const ext = recordedMp3Blob ? 'mp3' : 'webm';
+        const mimeType = recordedMp3Blob ? 'audio/mpeg' : 'audio/webm';
+        const fileName = `jake_story_${new Date().toISOString().slice(0,10)}.${ext}`;
+        const file = new File([blobToSend], fileName, { type: mimeType });
+        const textMessage = storyTextInput.value.trim() || 'Jake\'s story recording';
+
+        try {
+            if (canShareFile()) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Jake\'s Story',
+                    text: textMessage,
+                });
+                storyResult.textContent = '✅ Recording sent successfully!';
+                storyResult.className = 'story-result correct';
+            } else {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blobToSend);
+                link.download = fileName;
+                link.click();
+                storyResult.textContent = '📥 File downloaded! You can now send it to your teacher via email or messenger.';
+                storyResult.className = 'story-result partial';
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                storyResult.textContent = '⏹ Sending cancelled.';
+                storyResult.className = 'story-result partial';
+            } else {
+                console.error('Share error:', error);
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blobToSend);
+                link.download = fileName;
+                link.click();
+                storyResult.textContent = '📥 File downloaded! Send it to your teacher via email or messenger.';
+                storyResult.className = 'story-result partial';
+            }
+        }
+    });
+
+    storyResetBtn.addEventListener('click', function() {
+        resetRecorder();
+        storyTextInput.value = '';
+        storyResult.textContent = '';
+        storyResult.className = 'story-result';
+        recordingStatus.textContent = '⏸ Ready to record';
+        timerDisplay.textContent = '00:00';
+    });
+
+    storyCopyBtn.addEventListener('click', function() {
+        const text = storyTextInput.value.trim();
+        if (text === '') {
+            storyResult.textContent = '📝 Please write something first!';
+            storyResult.className = 'story-result wrong';
+            return;
+        }
+        navigator.clipboard.writeText(text).then(() => {
+            storyResult.textContent = '✅ Text copied! Share it with your teacher.';
+            storyResult.className = 'story-result correct';
+        }).catch(() => {
+            storyTextInput.select();
+            document.execCommand('copy');
+            storyResult.textContent = '✅ Text copied! Share it with your teacher.';
+            storyResult.className = 'story-result correct';
+        });
+    });
+
+    // =============================================================
+    // 9. SHARE WITH TEACHER
+    // =============================================================
+    document.querySelectorAll('.share-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.dataset.source;
+            const tabName = document.querySelector(`.tab-btn[data-tab="${tabId}"]`)?.textContent?.trim() || tabId;
+
+            let content = '';
+            const parentTab = this.closest('.tab-content');
+
+            if (parentTab) {
+                // Story — текст
+                const storyText = parentTab.querySelector('#storyTextInput');
+                if (storyText) {
+                    content = `📖 Jake's Story:\n${storyText.value || '(empty)'}`;
+                }
+
+                // Все поля ввода
+                const inputs = parentTab.querySelectorAll('input[type="text"], textarea');
+                if (inputs.length > 0 && !storyText) {
+                    inputs.forEach((input, index) => {
+                        const label = input.closest('.fill-item')?.querySelector('.fill-number')?.textContent ||
+                                      input.closest('.complete-item')?.querySelector('.complete-number')?.textContent ||
+                                      input.closest('.choose-item')?.querySelector('.choose-number')?.textContent ||
+                                      `Field ${index+1}`;
+                        content += `${label}: ${input.value || '(empty)'}\n`;
+                    });
+                }
+
+                // Flashcards
+                if (tabId === 'tab1') {
+                    const currentCollocation = document.getElementById('cardCollocation')?.textContent || '';
+                    content = `📸 Current flashcard: ${currentCollocation}`;
+                }
+
+                // Listen & Click
+                if (tabId === 'tabListen') {
+                    const score = document.getElementById('listenScore')?.textContent || '';
+                    content = `🎧 Listen & Click score: ${score}`;
+                }
+            }
+
+            if (!content) {
+                content = 'No data to share.';
+            }
+
+            const message = `📚 **Collocations - ${tabName}**\n\n${content}\n\n---\nSent from Interactive Flashcards 📱`;
+
+            navigator.clipboard.writeText(message).then(() => {
+                const originalText = this.textContent;
+                this.textContent = '✅ Copied!';
+                this.style.background = '#6a9a5e';
+                this.style.color = '#fff';
+                this.style.borderColor = '#6a9a5e';
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.background = 'transparent';
+                    this.style.color = '#4d3a28';
+                    this.style.borderColor = '#b09a84';
+                }, 2000);
+            }).catch(() => {
+                const msg = `📚 Collocations - ${tabName}\n\n${content}`;
+                prompt('Copy this message to share with your teacher:', msg);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
